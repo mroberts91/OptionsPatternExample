@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-using OptionsExample.Business.Logic;
-using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using OptionsExample.Configuration;
 
 namespace OptionsExample
 {
@@ -10,43 +8,20 @@ namespace OptionsExample
     [Route("[controller]")]
     public class ConfigurationController : ControllerBase
     {
-        private readonly ServiceALogic _serviceALogic;
-        private readonly ServiceBLogic _serviceBLogic;
-        private readonly ServiceCLogic _serviceCLogic;
+        private readonly IServiceOptions _serviceAOptions;
+        private readonly IServiceOptions _serviceBOptions;
+        private readonly IServiceOptions _serviceCOptions;
 
-        public ConfigurationController(ServiceALogic serviceALogic, ServiceBLogic serviceBLogic, ServiceCLogic serviceCLogic)
+        public ConfigurationController(IOptions<ServiceAOptions> serviceAOptions, IOptionsSnapshot<ServiceBOptions> serviceBOptions, IOptions<ServiceCOptions> serivceCOptions)
         {
-            _serviceALogic = serviceALogic;
-            _serviceBLogic = serviceBLogic;
-            _serviceCLogic = serviceCLogic;
+            _serviceAOptions = serviceAOptions.Value;
+            _serviceBOptions = serviceBOptions.Value;
+            _serviceCOptions = serivceCOptions.Value;
         }
 
         [HttpGet]
-        [SwaggerOperation(
-            Summary = "Get Option Configuration",
-            Description = "Get the available configuaration options on all services",
-            OperationId = "Configuaration.Get",
-            Tags = new[] { "ConfigurationEndpoint" })
-        ]
-        [Produces(System.Net.Mime.MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(OptionsResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Get()
-        {
-            return Ok(new OptionsResponse
-            {
-                ServiceA = _serviceALogic.GetOptions(),
-                ServiceB = _serviceBLogic.GetOptions(),
-                ServiceC = _serviceCLogic.GetOptions()
-            });
-        }
+            => Ok(new {ServiceA = _serviceAOptions.GetOptions(), ServiceB = _serviceBOptions.GetOptions(), ServiceC = _serviceCOptions.GetOptions()});
 
-        public class OptionsResponse
-        {
-            public object ServiceA { get; set; }
-            public object ServiceB { get; set; }
-            public object ServiceC { get; set; }
-            
-        }
     }
 }

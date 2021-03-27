@@ -1,25 +1,21 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using OptionsExample.Business.Configuration;
 
 namespace OptionsExample.Business.Logic
 {
     public class ServiceCLogic
     {
-        private readonly IOptions<ServiceCOptions> _serviceOptions;
-        private readonly ILogger<ServiceCLogic> _logger;
+        private readonly ServiceCOptions _serviceOptions;
 
-        public ServiceCLogic(IOptions<ServiceCOptions> serviceOptions, ILogger<ServiceCLogic> logger)
+        public ServiceCLogic(IOptionsSnapshot<ServiceCOptions> serviceOptions)
         {
-            _serviceOptions = serviceOptions;
-            _logger = logger;
-            _logger.LogInformation("Options Injects: {name}, Values: Service Url - {val1}, Service User - {val2}\n", nameof(serviceOptions), _serviceOptions.Value.ServiceUrl, _serviceOptions.Value.ServiceUserId);
+            _serviceOptions = serviceOptions.Value;
         }
 
         public object GetOptions() => new
         {
-            _serviceOptions.Value.ServiceUrl,
-            _serviceOptions.Value.ServiceUserId
+            _serviceOptions.ServiceUrl,
+            _serviceOptions.AppIdentifier,
         };
     }
 }

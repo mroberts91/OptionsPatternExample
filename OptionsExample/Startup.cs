@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using OptionsExample.Business.Extensions.DependecyInjection;
+using OptionsExample.Configuration;
 
 namespace OptionsExample
 {
@@ -15,8 +15,20 @@ namespace OptionsExample
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "OptionsExample", Version = "v1" });
                 c.EnableAnnotations();
             });
-           
-            services.AddOptionsExampleBusiness();
+
+            // Performs Data Anotation Validation
+            services.AddOptions<ServiceAOptions>()
+                    .BindConfiguration("ServiceA")
+                    .ValidateDataAnnotations();
+
+            // Performs Data Anotation Validation
+            services.AddOptions<ServiceBOptions>()
+                    .BindConfiguration("ServiceB")
+                    .ValidateDataAnnotations();
+
+            // No validation
+            services.AddOptions<ServiceCOptions>()
+                    .BindConfiguration("ServiceC");
         }
         public void Configure(IApplicationBuilder app)
         {
