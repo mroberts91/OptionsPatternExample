@@ -1,4 +1,4 @@
-﻿namespace OptionsExample.Business.Configuration
+﻿namespace OptionsExample.Configuration
 {
     public class ServiceCOptions : IServiceOptions
     {

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OptionsExample.Business.Configuration
+namespace OptionsExample.Configuration
 {
-    public class ServiceAOptions : IServiceOptions
+    public class ServiceBOptions : IServiceOptions
     {
         [Required(ErrorMessage = "Service Url is Required", AllowEmptyStrings = false)]
         [Url]
-        public string ServiceUrl { get; set ; }
+        public string ServiceUrl { get; set; }
         public string AppIdentifier { get; set; }
     }
 }
